@@ -10,6 +10,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="util.cu" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5DCD8CE6-4FAD-4038-8C46-1A6F086B96D8}</ProjectGuid>
     <RootNamespace>HW2</RootNamespace>

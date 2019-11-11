@@ -31,7 +31,7 @@ int main()
 	cudaDeviceProp deviceProp;
 	cudaGetDeviceProperties(&deviceProp, 0);
 
-	printf("Executing with N=%lld\n, K=%lld, M=%lld\n", N, M, K);
+	printf("Executing with N=%lld, K=%lld, M=%lld\n", N, M, K);
 
 	float *A, *B, *C;
 	cudaMallocManaged(&A, N * K * sizeof(float));
@@ -50,7 +50,7 @@ int main()
 	cudaFree(B);
 	cudaFree(C);
 
-    return 0;	
+    return 0;
 }
 
 void initPrint() {
@@ -81,10 +81,11 @@ __global__ void matmul_rec_glob(float* A, float* B, float* C, long long N, long 
 }
 
 __host__ void execute_matmul_rec_glob(float* A, float* B, float* C) {
-	int block_dim = (N + tpb_sqrt - 1) / tpb_sqrt;
+	int N_dim = (N + tpb_sqrt - 1) / tpb_sqrt;
+	int M_dim = (M + tpb_sqrt - 1) / tpb_sqrt;
 
 	dim3 threadsPerBlock(tpb_sqrt, tpb_sqrt);
-	dim3 blocksPerGrid(block_dim, block_dim);
+	dim3 blocksPerGrid(N_dim, M_dim);
 	printf("kernel_matmul_rec_glob:\n");
 
 	clock_t start, end;
