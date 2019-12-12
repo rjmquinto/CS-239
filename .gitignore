@@ -338,3 +338,14 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# C++ Object files
+*.o
+
+# Test data files
+*.dat
+
+# Log files
+*.csv
+*.log
+**/timestamp
