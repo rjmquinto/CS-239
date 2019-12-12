@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cmath>
 
-static const int numIterations = 10;
+static const int numIterations = 1000;
 
 __host__ __device__ float sigmoid(float x) {
 	return x/(1+exp(-x));
@@ -43,7 +43,7 @@ __global__ void lstm(float* in, float *out, float *W, float *B, float *U, long l
 __host__ void execute_lstm(float* in, float *out, long long N, long long M, const cudaDeviceProp &cdp) {
 	dim3 threadsPerBlock(cdp.maxThreadsPerBlock);
 	dim3 blocksPerGrid((M+cdp.maxThreadsPerBlock-1)/cdp.maxThreadsPerBlock);
-	printf("lstm:\n");
+	// printf("lstm:\n");
 
 	randomize(in, M, -1, 1);
 	float *in_dev, *out_dev;
@@ -82,6 +82,8 @@ __host__ void execute_lstm(float* in, float *out, long long N, long long M, cons
 		lstm<<<blocksPerGrid, threadsPerBlock>>>(in_dev, out_dev, W_dev, B_dev, U_dev, N, M);
 		cudaDeviceSynchronize();
 		end = clock();
+
+		printf("%f",(end-start)*1000.0/CLOCKS_PER_SEC);
 
 		totalTime += (end - start);
 

@@ -3,6 +3,9 @@
 #include "util.h"
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
+#include <sys/file.h>
+#include <unistd.h>
 
 inline int _ConvertSMVer2Cores(int major, int minor) {
 	// Defines for GPU Architecture types (using the SM version to determine
@@ -211,4 +214,29 @@ void randomize(float* A, long long N, float low, float high) {
 	for (int i = 0; i < N; i++) {
 		A[i] = (float)rand() / RAND_MAX * (high-low) + low;
 	}
+}
+
+
+
+long long readData(float **data, char *filename) {
+	std::ifstream fin(filename, std::ios::in | std::ios::binary);
+	long long len;
+	fin.read(reinterpret_cast<char*>(&len), sizeof(len));
+
+	*data = (float*)malloc(len*sizeof(float));
+	fin.read(reinterpret_cast<char*>(*data), len*sizeof(float));
+	fin.close();
+
+	return len;
+}
+
+int lock_file;
+void lock() {
+	lock_file = open("gpu.lock",O_RDWR);
+	flock(lock_file, LOCK_EX);
+}
+
+void unlock() {
+	flock(lock_file, LOCK_UN);
+	close(lock_file);
 }

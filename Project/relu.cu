@@ -1,7 +1,7 @@
 #include "util.h"
 #include <cstdio>
 
-static const int numIterations = 10;
+static const int numIterations = 1000;
 
 __global__ void relu(float* in, float *out, long long N) {
 	int p = blockIdx.x * blockDim.x + threadIdx.x;
@@ -33,6 +33,7 @@ __host__ void execute_relu(float* in, float *out, long long N, const cudaDeviceP
 		end = clock();
 
 		totalTime += (end - start);
+		printf("%f",(end-start)*1000.0/CLOCKS_PER_SEC);
 
 		cudaMemcpy(out, out_dev, N*sizeof(float), cudaMemcpyDeviceToHost);
 	}
